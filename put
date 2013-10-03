@@ -1,0 +1,8 @@
+#!/bin/bash
+
+cp  ~/.bashrc .
+cp -R ~/.vim .
+cp ~/.vimrc .
+cp ~/.bash_aliases .
+
+git commit -a && git push origin master

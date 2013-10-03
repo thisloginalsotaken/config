@@ -1,0 +1,7 @@
+#!/bin/bash
+git pull && (
+		cp .bashrc ~
+		cp -R ./.vim ~
+		cp ./.vimrc ~
+		cp ./.bash_aliases ~
+)
