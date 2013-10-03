@@ -1,1 +1,1 @@
-/usr/share/vim-scripts/plugin/surround.vim
+../plugin/surround.vim
