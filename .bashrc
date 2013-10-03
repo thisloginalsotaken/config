@@ -90,10 +90,11 @@ git_prompt ()
 
 
 if [ "$color_prompt" = yes ]; then
-	set_bash_prompt(){
-		PS1="[${user_color}\u${fg_color}@${host_color}\h${fg_color}: \[\033[01;34m\]\w\[\033[00m\]]$(git_prompt)\$ "
-	}
-	PROMPT_COMMAND=set_bash_prompt
+#	set_bash_prompt(){
+#		PS1="[${user_color}\u${fg_color}@${host_color}\h${fg_color}: \[\033[01;34m\]\w\[\033[00m\]]$(git_prompt)\$ "
+#	}
+#	PROMPT_COMMAND=set_bash_prompt
+	PS1="[${user_color}\u${fg_color}@${host_color}\h${fg_color}: \[\033[01;34m\]\w\[\033[00m\]]\$ "
 else
     PS1='$\u@\h:\w\$ '
 fi
