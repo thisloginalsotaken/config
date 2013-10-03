@@ -15,58 +15,73 @@ HISTCONTROL=ignoreboth
 # append to the history file, don't overwrite it
 shopt -s histappend
 
-# for setting history length see HISTSIZE and HISTFILESIZE in bash(1)
-# HISTSIZE=1000
-# HISTFILESIZE=2000
-
 # check the window size after each command and, if necessary,
 # update the values of LINES and COLUMNS.
 shopt -s checkwinsize
 
 # If set, the pattern "**" used in a pathname expansion context will
 # match all files and zero or more directories and subdirectories.
-#shopt -s globstar
+shopt -s globstar
 
 # make less more friendly for non-text input files, see lesspipe(1)
 [ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
 
-# set variable identifying the chroot you work in (used in the prompt below)
-if [ -z "${debian_chroot:-}" ] && [ -r /etc/debian_chroot ]; then
-    debian_chroot=$(cat /etc/debian_chroot)
+if [ -x /usr/bin/tput ] && tput setaf 1 >&/dev/null; then
+		# We have color support; assume it's compliant with Ecma-48
+		# (ISO/IEC-6429). (Lack of such support is extremely rare, and such
+		# a case would tend to support setf rather than setaf.)
+		color_prompt=yes
+else
+		color_prompt=
 fi
 
-# set a fancy prompt (non-color, unless we know we "want" color)
-case "$TERM" in
-    xterm-color) color_prompt=yes;;
-esac
 
-# uncomment for a colored prompt, if the terminal has the capability; turned
-# off by default to not distract the user: the focus in a terminal window
-# should be on the output of commands, not on the prompt
-#force_color_prompt=yes
+# define colors
+fg_color='\[\033[00m\]'
+black='\[\033[0;30m\]'  
+blue='\[\033[0;34m\]'  
+green='\[\033[0;32m\]'  
+cyan='\[\033[0;36m\]'  
+red='\[\033[0;31m\]'  
+purple='\[\033[0;35m\]'  
+brown='\[\033[0;33m\]'  
+light_gray='\[\033[0;37m\]'  
+dark_gray='\[\033[1;30m\]'  
+light_blue='\[\033[1;34m\]'  
+light_green='\[\033[1;32m\]'  
+light_cyan='\[\033[1;36m\]'  
+light_red='\[\033[1;31m\]'  
+light_purple='\[\033[1;35m\]'  
+yellow='\[\033[1;33m\]'  
+white='\[\033[1;37m\]'  
 
-if [ -n "$force_color_prompt" ]; then
-    if [ -x /usr/bin/tput ] && tput setaf 1 >&/dev/null; then
-	# We have color support; assume it's compliant with Ecma-48
-	# (ISO/IEC-6429). (Lack of such support is extremely rare, and such
-	# a case would tend to support setf rather than setaf.)
-	color_prompt=yes
-    else
-	color_prompt=
-    fi
+H=$HOSTNAME
+
+if [ "$H" = "eugeny-bubuntu" ]; then
+	host_color=$blue
+elif ( [ "$H" = "web21" ] || [ "$H" = "web14" ] ); then
+	host_color=$yellow
+else
+	host_color=$red
 fi
+
+if [ "$UID" = "0" ]; then
+	user_color=$red
+else
+	user_color=$light_green
+fi
+
 
 if [ "$color_prompt" = yes ]; then
-    PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
+	PS1="[${user_color}\u${fg_color}@${host_color}\h${fg_color}: \[\033[01;34m\]\w\[\033[00m\]]\$ "
 else
-    PS1='${debian_chroot:+($debian_chroot)}\u@\h:\w\$ '
+    PS1='$\u@\h:\w\$ '
 fi
-unset color_prompt force_color_prompt
 
-# If this is an xterm set the title to user@host:dir
-case "$TERM" in
+# if this is an xterm set the title to user@host:dir
+case "$term" in
 xterm*|rxvt*)
-    PS1="\[\e]0;${debian_chroot:+($debian_chroot)}\u@\h: \w\a\]$PS1"
+    PS1="\[\e]0;\u@\h: \w\a\]$PS1"
     ;;
 *)
     ;;
@@ -113,6 +128,5 @@ if ! shopt -oq posix; then
   fi
 fi
 
-PS1='[${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u: \[\033[01;34m\]\w\[\033[00m\]]\$ '
 export _JAVA_OPTIONS='-Dawt.useSystemAAFontSettings=on'
 
