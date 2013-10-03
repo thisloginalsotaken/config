@@ -58,7 +58,7 @@ white='\[\033[1;37m\]'
 H=$HOSTNAME
 
 if [ "$H" = "eugeny-bubuntu" ]; then
-	host_color=$blue
+	host_color=$brown
 elif ( [ "$H" = "web21" ] || [ "$H" = "web14" ] ); then
 	host_color=$yellow
 else
