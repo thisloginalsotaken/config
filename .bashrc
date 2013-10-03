@@ -57,7 +57,7 @@ white='\[\033[1;37m\]'
 
 H=$HOSTNAME
 
-if [ "$H" = "eugeny-bubuntu" ]; then
+if [ "$H" = "yb-0" ]; then
 	host_color=$brown
 elif ( [ "$H" = "web21" ] || [ "$H" = "web14" ] ); then
 	host_color=$yellow
@@ -72,8 +72,28 @@ else
 fi
 
 
+git_prompt ()
+{
+	if ! git rev-parse --git-dir > /dev/null 2>&1; then
+    	return 0
+	fi
+	git_branch=$(git branch 2>/dev/null| sed -n '/^\*/s/^\* //p')
+
+	if git diff --quiet 2>/dev/null >&2; then
+    	git_color=${light_gray}
+	else
+    	git_color=${white}
+	fi
+
+	echo "(${git_color}$git_branch${fg_color})"
+}
+
+
 if [ "$color_prompt" = yes ]; then
-	PS1="[${user_color}\u${fg_color}@${host_color}\h${fg_color}: \[\033[01;34m\]\w\[\033[00m\]]\$ "
+	set_bash_prompt(){
+		PS1="[${user_color}\u${fg_color}@${host_color}\h${fg_color}: \[\033[01;34m\]\w\[\033[00m\]]$(git_prompt)\$ "
+	}
+	PROMPT_COMMAND=set_bash_prompt
 else
     PS1='$\u@\h:\w\$ '
 fi
@@ -98,15 +118,6 @@ if [ -x /usr/bin/dircolors ]; then
     alias fgrep='fgrep --color=auto'
     alias egrep='egrep --color=auto'
 fi
-
-# some more ls aliases
-alias ll='ls -alF'
-alias la='ls -A'
-alias l='ls -CF'
-
-# Add an "alert" alias for long running commands.  Use like so:
-#   sleep 10; alert
-alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
 
 # Alias definitions.
 # You may want to put all your additions into a separate file like

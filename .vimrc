@@ -7,4 +7,5 @@ map <F2> :w !sudo tee % <CR>
 map <F9> :w <CR> :!% <CR>
 
 
-
+au BufReadPost eye.conf set syntax=ruby
+au BufReadPost *.eye set syntax=ruby
