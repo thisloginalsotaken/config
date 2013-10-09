@@ -62,11 +62,11 @@ if [ "$H" = "yb-0" ]; then
 elif ( [ "$H" = "web21" ] || [ "$H" = "web14" ] ); then
 	host_color=$yellow
 else
-	host_color=$red
+	host_color=$light_red
 fi
 
 if [ "$UID" = "0" ]; then
-	user_color=$red
+	user_color=$light_red
 else
 	user_color=$light_green
 fi
@@ -80,12 +80,10 @@ git_prompt ()
 	git_branch=$(git branch 2>/dev/null| sed -n '/^\*/s/^\* //p')
 
 	if git diff --quiet 2>/dev/null >&2; then
-    	git_color=${light_gray}
+    	echo "-"
 	else
-    	git_color=${white}
+    	echo "*" 
 	fi
-
-	echo "(${git_color}$git_branch${fg_color})"
 }
 
 
@@ -94,7 +92,7 @@ if [ "$color_prompt" = yes ]; then
 #		PS1="[${user_color}\u${fg_color}@${host_color}\h${fg_color}: \[\033[01;34m\]\w\[\033[00m\]]$(git_prompt)\$ "
 #	}
 #	PROMPT_COMMAND=set_bash_prompt
-	PS1="[${user_color}\u${fg_color}@${host_color}\h${fg_color}: \[\033[01;34m\]\w\[\033[00m\]]\$ "
+	PS1="\$(git_prompt)[${user_color}\u${fg_color}@${host_color}\h${fg_color}: \[\033[01;34m\]\w\[\033[00m\]]\$ "
 else
     PS1='$\u@\h:\w\$ '
 fi
@@ -141,4 +139,11 @@ if ! shopt -oq posix; then
 fi
 
 export _JAVA_OPTIONS='-Dawt.useSystemAAFontSettings=on'
+export LANG=en_US.UTF-8
+
+if [ "$H" = "yb-0" ]; then
+	. ~/work/ve/bin/activate
+fi
+
+
 
