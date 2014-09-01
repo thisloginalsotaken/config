@@ -146,4 +146,34 @@ if [ "$H" = "yb-0" ]; then
 fi
 
 
+# функция для поиска штук типа .git и venv
+function upsearch {
+    pattern=$1
+    activate_script=`find ${pattern}  2>/dev/null`
+    if [ $? == 0 ]
+    then
+        echo ${activate_script}
+        return 0
+    fi
+
+    if [ "/" == "$PWD" ]
+    then
+        return 1
+    else
+        pushd .. > /dev/null 2>&1
+        result=`upsearch $@`
+        success=$?
+        popd +0 > /dev/null 2>&1
+        if [ ${success} == 0 ]
+        then
+            echo "../${result}"
+            return 0
+        else
+            return 1
+        fi
+    fi
+}
+
+
+
 
