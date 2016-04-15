@@ -35,7 +35,6 @@ else
 		color_prompt=
 fi
 
-
 # define colors
 fg_color='\[\033[00m\]'
 black='\[\033[0;30m\]'  
@@ -71,7 +70,6 @@ else
 	user_color=$light_green
 fi
 
-
 git_prompt ()
 {
 	if ! git rev-parse --git-dir > /dev/null 2>&1; then
@@ -85,7 +83,6 @@ git_prompt ()
     	echo "*" 
 	fi
 }
-
 
 if [ "$color_prompt" = yes ]; then
 #	set_bash_prompt(){
@@ -141,11 +138,6 @@ fi
 export _JAVA_OPTIONS='-Dawt.useSystemAAFontSettings=on'
 export LANG=en_US.UTF-8
 
-if [ "$H" = "yb-0" ]; then
-	. ~/work/ve/bin/activate
-fi
-
-
 # функция для поиска штук типа .git и venv
 function upsearch {
     pattern=$1
@@ -174,6 +166,30 @@ function upsearch {
     fi
 }
 
+function activate {
+	if [ "`type -t deactivate`" == "function" ]; then
+		deactivate
+	fi
 
+	if [ "$1" != "" ]; 	then
+    	activator=`upsearch ${1}/bin/activate`
+    else
+        activator=`upsearch */bin/activate`
+    fi
 
+	if [ "$activator" != "" ];  then
+		source ${activator}
+	else
+		echo "no venv here!"
+	fi
+
+}
+
+export PATH="$PATH:$HOME/.rvm/bin" # Add RVM to PATH for scripting
+
+export PATH="$PATH:$HOME/.rvm/bin" # Add RVM to PATH for scripting
+
+export HISTSIZE=-1
+export HISTSIZEFILE=-1
+export PROMPT_COMMAND='history -a'
 
