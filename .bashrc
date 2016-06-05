@@ -56,7 +56,7 @@ white='\[\033[1;37m\]'
 
 H=$HOSTNAME
 
-if [ "$H" = "yb-0" ]; then
+if ([ "$H" = "yb-0" ] || [ "$H" = "xps13" ] ); then
 	host_color=$brown
 elif ( [ "$H" = "web21" ] || [ "$H" = "web14" ] ); then
 	host_color=$yellow
