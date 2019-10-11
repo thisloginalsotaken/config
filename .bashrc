@@ -88,7 +88,6 @@ if [ "$color_prompt" = yes ]; then
 #	set_bash_prompt(){
 #		PS1="[${user_color}\u${fg_color}@${host_color}\h${fg_color}: \[\033[01;34m\]\w\[\033[00m\]]$(git_prompt)\$ "
 #	}
-#	PROMPT_COMMAND=set_bash_prompt
 	PS1="\$(git_prompt)[${user_color}\u${fg_color}@${host_color}\h${fg_color}: \[\033[01;34m\]\w\[\033[00m\]]\$ "
 else
     PS1='$\u@\h:\w\$ '
@@ -102,6 +101,8 @@ xterm*|rxvt*)
 *)
     ;;
 esac
+
+
 
 # enable color support of ls and also add handy aliases
 if [ -x /usr/bin/dircolors ]; then
@@ -135,7 +136,6 @@ if ! shopt -oq posix; then
   fi
 fi
 
-export _JAVA_OPTIONS='-Dawt.useSystemAAFontSettings=on'
 export LANG=en_US.UTF-8
 
 # функция для поиска штук типа .git и venv
@@ -185,11 +185,47 @@ function activate {
 
 }
 
-export PATH="$PATH:$HOME/.rvm/bin" # Add RVM to PATH for scripting
+function set_term_title {
+	echo -en "\033]0;$1\a"
+}
 
-export PATH="$PATH:$HOME/.rvm/bin" # Add RVM to PATH for scripting
 
-export HISTSIZE=-1
+
+
+export HISTSIZE="pewpew"
 export HISTSIZEFILE=-1
-export PROMPT_COMMAND='history -a'
+export HISTCONTROL=ignoreboth:erasedups
+export PROMPT_COMMAND='echo -en "\033]0;[win] $(dirs)\a"'
+# export PROMPT_COMMAND='history -a'
+
+# ssh agent
+
+agent_load_env () { test -f "$env" && . "$env" >| /dev/null ; }
+
+agent_start () {
+    (umask 077; ssh-agent >| "$env")
+    . "$env" >| /dev/null ; }
+
+
+env=~/.ssh/agent.env
+agent_load_env
+# agent_run_state: 0=agent running w/ key; 1=agent w/o key; 2= agent not running
+agent_run_state=$(ssh-add -l >| /dev/null 2>&1; echo $?)
+set_term_title 'loading ssh agent'
+if [ ! "$SSH_AUTH_SOCK" ] || [ $agent_run_state = 2 ]; then
+    agent_start
+    ssh-add
+elif [ "$SSH_AUTH_SOCK" ] && [ $agent_run_state = 1 ]; then
+    ssh-add
+fi
+unset env
+
+
+function ssh {
+	set_term_title "$@"
+	/usr/bin/ssh $@
+}
+
+
+export EDITOR="vim"
 
